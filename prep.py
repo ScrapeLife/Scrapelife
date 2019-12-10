@@ -1,86 +1,60 @@
 import unicodedata
 import re
-import json
-
 import nltk
 from nltk.tokenize.toktok import ToktokTokenizer
 from nltk.corpus import stopwords
 
-import pandas as pd
+def pre_prep(unclean_str):
+    clean_str = unclean_str.lower()
+    clean_str = re.sub(r'[\s]+', ' ', clean_str)
+    clean_str = clean_str.strip()
+    return clean_str
 
+def remove_non_ascii(unclean_str):  
+    clean_str =     unicodedata.normalize('NFKD', unclean_str)\
+                        .encode('ascii', 'ignore')\
+                        .decode('utf-8', 'ignore')
+    return clean_str
 
-def basic_clean(string):
-    """
-    Lowercase the string
-    Normalize unicode characters
-    Replace anything that is not a letter, number, whitespace or a single quote.
-    """
-    string = string.lower()
-    string = unicodedata.normalize('NFKD', string).encode('ascii', 'ignore').decode('utf-8', 'ignore')
-    
-    # remove anything not a space character, an apostrophy, letter, or number
-    string = re.sub(r"[^a-z\s]", '', string)
+def remove_special_characters(unclean_str):
+    clean_str = re.sub(r"[^a-z'\s]", '', unclean_str)
+    return clean_str
 
-    # convert newlins and tabs to a single space
-    string = re.sub(r'[\r|\n|\r\n]+', ' ', string)
-    string = string.strip()
-    return string
+def tokenize(unclean_str):
+    tokenizer = ToktokTokenizer()
+    clean_str = tokenizer.tokenize(unclean_str, return_str=True)
+    return clean_str
 
-def tokenize(string):
-    tokenizer = nltk.tokenize.ToktokTokenizer()
-    return tokenizer.tokenize(string, return_str=True)
+def lemmatize(unclean_str):
+    wn1 = nltk.stem.WordNetLemmatizer()
+    clean_str = ' '.join([wn1.lemmatize(word) for word in unclean_str.split()])
+    return clean_str
 
-def stem(string):
+def stem(unclean_str):
     ps = nltk.porter.PorterStemmer()
-    stems = [ps.stem(word) for word in string.split()]
-    string_of_stems = ' '.join(stems)
-    return string_of_stems
+    clean_str = ' '.join([ps.stem(word) for word in unclean_str.split()])
+    return clean_str
 
-def lemmatize(string):
-    wnl = nltk.stem.WordNetLemmatizer()
-    lemmas = [wnl.lemmatize(word) for word in string.split()]
-    string_of_lemmas = ' '.join(lemmas)
-    return string_of_lemmas
+def remove_stopwords(unclean_str, extra_words = [], exclude_words = []):
+    sw_list = stopwords.words('english')
+    for add_word in extra_words:
+        sw_list.append(add_word)
+    for rm_word in exclude_words:
+        sw_list.remove(rm_word)
+    unclean_str = tokenize(unclean_str).split()
+    clean_str = ' '.join([word for word in unclean_str if word not in sw_list])
+    return clean_str
 
-
-def remove_stopwords(string, extra_words=[], exclude_words=[]):
-    # Tokenize the string
-    string = tokenize(string)
-
-    words = string.split()
-    stopword_list = stopwords.words('english')
-
-    # remove the excluded words from the stopword list
-    stopword_list = set(stopword_list) - set(exclude_words)
-
-    # add in the user specified extra words
-    stopword_list = stopword_list.union(set(extra_words))
-
-    filtered_words = [w for w in words if w not in stopword_list]
-    final_string = " ".join(filtered_words)
-    return final_string
-
-def prep_articles(df):
-    df["original"] = df.body
-    df["stemmed"] = df.body.apply(basic_clean).apply(stem)
-    df["lemmatized"] = df.body.apply(basic_clean).apply(lemmatize)
-    df["clean"] = df.body.apply(basic_clean).apply(remove_stopwords)
-    df.drop(columns=["body"], inplace=True)
+def basic_clean(df, stem_or_lem = 'lemmatize'):
+    for col in df:
+        df[col] = df[col].apply(pre_prep)
+        df[col] = df[col].apply(remove_non_ascii) 
+        df[col] = df[col].apply(remove_special_characters) 
+        df[col] = df[col].apply(tokenize)
+        if stem_or_lem == 'lemmatize':
+            df[col] = df[col].apply(lemmatize)
+        elif stem_or_lem == 'stem':
+            df[col] = df[col].apply(stem)
+        df[col] = df[col].apply(remove_stopwords)
     return df
 
-def prep_blog_posts():
-    df = acquire.get_blog_posts()
-    return prep_articles(df)
-
-def prep_news_articles():
-    df = acquire.get_news_articles()
-    return prep_articles(df)
-
-def prep_corpus():
-    blog_df = prep_blog_posts()
-    blog_df["source"] = "Codeup Blog"
-
-    news_df = prep_news_articles()
-    news_df["source"] = "InShorts News"
-
-    return blog_df, news_df
