@@ -19,7 +19,7 @@ def basic_clean(string):
     string = unicodedata.normalize('NFKD', string).encode('ascii', 'ignore').decode('utf-8', 'ignore')
     
     # remove anything not a space character, an apostrophy, letter, or number
-    string = re.sub(r"[^a-z'\s]", '', string)
+    string = re.sub(r"[^a-z\s]", '', string)
 
     # convert newlins and tabs to a single space
     string = re.sub(r'[\r|\n|\r\n]+', ' ', string)
