@@ -17,7 +17,7 @@ def remove_non_ascii(unclean_str):
     return clean_str
 
 def remove_special_characters(unclean_str):
-    clean_str = re.sub(r"[^a-z'\s]", '', unclean_str)
+    clean_str = re.sub(r"[^a-z\s]", '', unclean_str)
     return clean_str
 
 def tokenize(unclean_str):
