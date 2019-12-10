@@ -1,4 +1,4 @@
-#Readme ScrapeLife
+# Readme ScrapeLife
 
 Goal: For this project, you will be scraping data from GitHub repository 
 README files. The goal will be to build a model that can predict what 
@@ -14,11 +14,11 @@ One or two google slides suitable for a general audience that summarize your fin
 
 
 Required Libraries:
-Pandas
-Beautiful Soup
-numpuy
-matplotlib
-os
-re
-unicodedata
-nltk
+- Pandas
+- Beautiful Soup
+- numpuy
+- matplotlib
+- os
+- re
+- unicodedata
+- nltk
