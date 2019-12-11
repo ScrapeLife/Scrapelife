@@ -1,4 +1,6 @@
 import unicodedata
+import pandas as pd
+from bs4 import BeautifulSoup
 import re
 import nltk
 from nltk.tokenize.toktok import ToktokTokenizer
@@ -47,6 +49,7 @@ def remove_stopwords(unclean_str, extra_words = [], exclude_words = []):
 
 def basic_clean(df, stem_or_lem = 'lemmatize'):
     for col in df:
+        df[col] = df[col].apply(beautiful_soup)
         df[col] = df[col].apply(pre_prep)
         df[col] = df[col].apply(remove_non_ascii) 
         df[col] = df[col].apply(remove_special_characters) 
@@ -58,3 +61,9 @@ def basic_clean(df, stem_or_lem = 'lemmatize'):
         df[col] = df[col].apply(remove_stopwords)
     return df
 
+def beautiful_soup(x):
+    re_urls = r'''(http[s]*?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'''
+    x = BeautifulSoup(x).text
+    x = re.sub(re_urls, ' ', x)
+    x = re.sub(r'\[(.*?)\]', ' ', x)
+    x = re.sub(r'\((.*?)\)', ' ', x)
