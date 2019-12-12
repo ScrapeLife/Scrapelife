@@ -35,24 +35,24 @@ Run through .ipynb
 
 Random states are set as 123 in the notebook
 
-Disclaimer: The assignment called for us to pull the top 100 most forked repos. Our intial investigation showed that the majority of the top 100 was all java based repos. In order to improve our model to work with other languages, e decided to ouyll the top 120 repos of the four languages (Python, Java, javaScript, Php).
+Disclaimer: The assignment called for us to pull the top 100 most forked repos. Our intial investigation showed that the majority of the top 100 was all java based repos. In order to improve our model to work with other languages, we decided to use the top 120 repos of the four languages:(Python, Java, javaScript, Php).
 
-Acquire:
+**Acquire:**                
 Using github's API and beautiful soup to scrape the top 130 repos of four different languages (Python, Java, javaScript, Php).
 
-Prep:
+**Prep:**
 Prepared our data with beautiful soup and regex commands to remove excess noise. 
 
-Exploration:
+**Exploration:**
 We wanted to find the most occuring words unique to each language repos. We used word clouds to see a overview of the most potent words
 of each language. 
 
 
-Modeling:
+**Modeling:**
 We split the data (words) into a sparse matrix and input that into a decision tree classifier. Using the full word bank (after cleaning and getting rid of words over 11 characters) we used a max depth of 9 to come uop qith our model of predicting the language of the githiub repository.
 
 
-Conclusion:
+**Conclusion:**
 After exploring and running our model we were able to conclude that the actual language being present in the readme was a factor, but not the main factor. There are words that are unique to each language repositories that favor the targets.
 
 We used two models: decision tree and logistic regression to classify these repositories languages. 
