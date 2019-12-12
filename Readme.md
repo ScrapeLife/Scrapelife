@@ -25,6 +25,8 @@ Required Libraries:
 
 Dependencies
 
+env.py file with github access toke and username
+
 github (.csv)
 
 Multiple .py files to run model and reproduce the report
@@ -35,10 +37,10 @@ Run through .ipynb
 
 Random states are set as 123 in the notebook
 
-Disclaimer: The assignment called for us to pull the top 100 most forked repos. Our intial investigation showed that the majority of the top 100 was all java based repos. In order to improve our model to work with other languages, we decided to use the top 120 repos of the four languages:(Python, Java, javaScript, Php).
+Disclaimer: The assignment called for us to pull the top 100 most forked repos. Our intial investigation showed that the majority of the top 100 were a large majority JavaScript. To provide diversity to our model, we used the top 120 repos of the four languages:(Python, Java, JavaScript, PHP).
 
 **Acquire:**                
-Using github's API and beautiful soup to scrape the top 130 repos of four different languages (Python, Java, javaScript, Php).
+Using github's API, we scraped the top 130 repos of the four most popular languages (Python, Java, javaScript, Php).
 
 **Prep:**
 Prepared our data with beautiful soup and regex commands to remove excess noise. 
@@ -57,9 +59,9 @@ After exploring and running our model we were able to conclude that the actual l
 
 We used two models: decision tree and logistic regression to classify these repositories languages. 
 
-The Decision Tree Model:    our test accuracy is:  84.6%
+> The Decision Tree Model:  our test accuracy is:  84.6%
 
-Logistic Regression Model:  our test accuracy is:  91.5%
+> Logistic Regression Model:  our test accuracy is:  91.5%
 
 
 We believe the logistic regression model perfomred better because it gave more weight to the unique words in each class (language)
